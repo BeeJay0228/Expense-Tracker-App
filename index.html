@@ -48,8 +48,39 @@
     <section class="card total-card" aria-label="Total expenses">
       <h2 class="section-title">Total Expenses</h2>
       <div id="total-amount" class="total-amount">₦0</div>
+      <button id="save-day-btn" disabled>Save Day</button>
+    </section>
+
+    <section class="card history-card" aria-label="Saved history">
+      <h2 class="section-title">History</h2>
+      <div id="history-list">
+        <div class="empty-state">No saved days yet.</div>
+      </div>
     </section>
   </main>
+
+  <div class="modal-overlay" id="success-modal" hidden>
+    <div class="modal-content success-content">
+      <div class="checkmark-container">
+        <svg class="checkmark" viewBox="0 0 52 52">
+          <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+          <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16"/>
+        </svg>
+      </div>
+      <h2 class="modal-heading">Successfully Tracked</h2>
+      <p class="modal-text">Your expenses have been saved for today.</p>
+      <button class="modal-btn" id="close-success-btn">Done</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="detail-modal" hidden>
+    <div class="modal-content detail-content">
+      <h2 class="modal-heading" id="detail-date-heading"></h2>
+      <div id="detail-expenses"></div>
+      <div class="detail-total" id="detail-total">Total: ₦0</div>
+      <button class="modal-btn" id="close-detail-btn">Close</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
