@@ -18,9 +18,10 @@
   const detailTotal = document.getElementById('detail-total');
   const closeDetailBtn = document.getElementById('close-detail-btn');
 
-  let expenses = [];
   var savedDays = {};
   var STORAGE_KEY = 'expense-tracker-history';
+  var CURRENT_KEY = 'expense-tracker-current';
+  var expenses;
 
   (function setDefaultDate() {
     const today = new Date();
@@ -179,6 +180,7 @@
     expenses = expenses.filter(function (e) {
       return e.id !== id;
     });
+    saveCurrentExpenses();
     renderExpenses();
     updateTotal();
     nameInput.focus();
@@ -204,6 +206,7 @@
     };
 
     expenses.push(expense);
+    saveCurrentExpenses();
     renderExpenses();
     updateTotal();
     nameInput.value = '';
@@ -237,6 +240,23 @@
 
   function saveSavedDays() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(savedDays));
+  }
+
+  function loadCurrentExpenses() {
+    var stored = localStorage.getItem(CURRENT_KEY);
+    if (stored) {
+      try {
+        expenses = JSON.parse(stored);
+      } catch (_) {
+        expenses = [];
+      }
+    } else {
+      expenses = [];
+    }
+  }
+
+  function saveCurrentExpenses() {
+    localStorage.setItem(CURRENT_KEY, JSON.stringify(expenses));
   }
 
   function renderHistory() {
@@ -325,6 +345,7 @@
 
     saveSavedDays();
     expenses = [];
+    saveCurrentExpenses();
     renderExpenses();
     updateTotal();
     renderHistory();
@@ -377,17 +398,28 @@
     detailModal.hidden = true;
   }
 
-  loadSavedDays();
-  renderHistory();
-  form.addEventListener('submit', handleSubmit);
-  saveDayBtn.addEventListener('click', saveDay);
-  closeSuccessBtn.addEventListener('click', hideSuccessModal);
-  successModal.addEventListener('click', function (e) {
-    if (e.target === successModal) hideSuccessModal();
-  });
-  closeDetailBtn.addEventListener('click', hideDayDetail);
-  detailModal.addEventListener('click', function (e) {
-    if (e.target === detailModal) hideDayDetail();
-  });
-  nameInput.focus();
+  function init() {
+    loadSavedDays();
+    loadCurrentExpenses();
+    renderExpenses();
+    renderHistory();
+    updateTotal();
+    form.addEventListener('submit', handleSubmit);
+    saveDayBtn.addEventListener('click', saveDay);
+    closeSuccessBtn.addEventListener('click', hideSuccessModal);
+    successModal.addEventListener('click', function (e) {
+      if (e.target === successModal) hideSuccessModal();
+    });
+    closeDetailBtn.addEventListener('click', hideDayDetail);
+    detailModal.addEventListener('click', function (e) {
+      if (e.target === detailModal) hideDayDetail();
+    });
+    nameInput.focus();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
