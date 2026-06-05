@@ -1,7 +1,9 @@
 (function () {
   const form = document.getElementById('expense-form');
+  const dateInput = document.getElementById('expense-date');
   const nameInput = document.getElementById('expense-name');
   const amountInput = document.getElementById('expense-amount');
+  const dateError = document.getElementById('date-error');
   const nameError = document.getElementById('name-error');
   const amountError = document.getElementById('amount-error');
   const expenseList = document.getElementById('expense-list');
@@ -9,8 +11,41 @@
 
   let expenses = [];
 
+  (function setDefaultDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    dateInput.value = year + '-' + month + '-' + day;
+  })();
+
   function formatNaira(amount) {
     return '\u20A6' + Number(amount).toLocaleString('en-NG');
+  }
+
+  function formatDate(dateStr) {
+    var parts = dateStr.split('-');
+    var date = new Date(parts[0], parts[1] - 1, parts[2]);
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+  }
+
+  function formatTimestamp(isoStr) {
+    var date = new Date(isoStr);
+    var formatted = date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+    var time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    return formatted + ' \u2022 ' + time;
   }
 
   function getTotal() {
@@ -22,8 +57,10 @@
   }
 
   function clearErrors() {
+    dateError.textContent = '';
     nameError.textContent = '';
     amountError.textContent = '';
+    dateInput.closest('.form-group').classList.remove('error');
     nameInput.closest('.form-group').classList.remove('error');
     amountInput.closest('.form-group').classList.remove('error');
   }
@@ -33,16 +70,21 @@
     input.closest('.form-group').classList.add('error');
   }
 
-  function validate(name, amount) {
-    let valid = true;
+  function validate(date, name, amount) {
+    var valid = true;
     clearErrors();
+
+    if (!date) {
+      showError(dateInput, dateError, 'Please select a date.');
+      valid = false;
+    }
 
     if (!name || name.trim() === '') {
       showError(nameInput, nameError, 'Please enter an expense name.');
       valid = false;
     }
 
-    const num = Number(amount);
+    var num = Number(amount);
     if (!amount || amount.trim() === '') {
       showError(amountInput, amountError, 'Please enter a valid amount.');
       valid = false;
@@ -69,29 +111,48 @@
     const fragment = document.createDocumentFragment();
 
     expenses.forEach(function (expense) {
-      const item = document.createElement('div');
+      var item = document.createElement('div');
       item.className = 'expense-item';
 
-      const info = document.createElement('div');
+      var left = document.createElement('div');
+      left.className = 'expense-left';
+
+      var info = document.createElement('div');
       info.className = 'expense-info';
 
-      const nameSpan = document.createElement('span');
+      var nameSpan = document.createElement('span');
       nameSpan.className = 'expense-name';
       nameSpan.textContent = expense.name;
 
-      const dot = document.createElement('span');
+      var dot = document.createElement('span');
       dot.className = 'expense-dot';
       dot.textContent = '\u00B7';
 
-      const amountSpan = document.createElement('span');
+      var amountSpan = document.createElement('span');
       amountSpan.className = 'expense-amount';
       amountSpan.textContent = formatNaira(expense.amount);
 
       info.appendChild(nameSpan);
       info.appendChild(dot);
       info.appendChild(amountSpan);
+      left.appendChild(info);
 
-      const deleteBtn = document.createElement('button');
+      var meta = document.createElement('div');
+      meta.className = 'expense-meta';
+
+      var tracked = document.createElement('span');
+      tracked.className = 'expense-tracked';
+      tracked.textContent = 'Tracked For: ' + formatDate(expense.trackedDate);
+
+      var logged = document.createElement('span');
+      logged.className = 'expense-logged';
+      logged.textContent = 'Logged: ' + formatTimestamp(expense.loggedAt);
+
+      meta.appendChild(tracked);
+      meta.appendChild(logged);
+      left.appendChild(meta);
+
+      var deleteBtn = document.createElement('button');
       deleteBtn.className = 'delete-btn';
       deleteBtn.textContent = 'Delete';
       deleteBtn.setAttribute('aria-label', 'Delete ' + expense.name);
@@ -99,7 +160,7 @@
         deleteExpense(expense.id);
       });
 
-      item.appendChild(info);
+      item.appendChild(left);
       item.appendChild(deleteBtn);
       fragment.appendChild(item);
     });
@@ -116,11 +177,13 @@
     nameInput.focus();
   }
 
-  function addExpense(name, amount) {
-    const expense = {
+  function addExpense(date, name, amount) {
+    var expense = {
       id: Date.now(),
+      trackedDate: date,
       name: name.trim(),
       amount: Number(amount),
+      loggedAt: new Date().toISOString(),
     };
 
     expenses.push(expense);
@@ -135,12 +198,13 @@
   function handleSubmit(e) {
     e.preventDefault();
 
-    const name = nameInput.value;
-    const amount = amountInput.value;
+    var date = dateInput.value;
+    var name = nameInput.value;
+    var amount = amountInput.value;
 
-    if (!validate(name, amount)) return;
+    if (!validate(date, name, amount)) return;
 
-    addExpense(name, amount);
+    addExpense(date, name, amount);
   }
 
   form.addEventListener('submit', handleSubmit);

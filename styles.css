@@ -156,14 +156,18 @@ body {
 
 .expense-item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 14px 0;
   border-bottom: 1px solid var(--border);
 }
 
 .expense-item:last-child {
   border-bottom: none;
+}
+
+.expense-left {
+  flex: 1;
+  min-width: 0;
 }
 
 .expense-info {
@@ -191,6 +195,21 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.expense-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.expense-tracked,
+.expense-logged {
+  white-space: nowrap;
+}
+
 .delete-btn {
   background: none;
   border: none;
@@ -203,6 +222,8 @@ body {
   transition: background 0.2s;
   font-family: inherit;
   flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
 }
 
 .delete-btn:hover {

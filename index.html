@@ -18,6 +18,11 @@
       <h2 class="section-title">Add Expense</h2>
       <form id="expense-form" novalidate>
         <div class="form-group">
+          <label for="expense-date">Date</label>
+          <input type="date" id="expense-date" name="date" required>
+          <span class="error-message" id="date-error" role="alert"></span>
+        </div>
+        <div class="form-group">
           <label for="expense-name">Expense Name</label>
           <input type="text" id="expense-name" name="name" placeholder="e.g. Transport, Food, Data" autocomplete="off" required>
           <span class="error-message" id="name-error" role="alert"></span>
