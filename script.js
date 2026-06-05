@@ -23,16 +23,6 @@
     return '\u20A6' + Number(amount).toLocaleString('en-NG');
   }
 
-  function formatDate(dateStr) {
-    var parts = dateStr.split('-');
-    var date = new Date(parts[0], parts[1] - 1, parts[2]);
-    return date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    });
-  }
-
   function formatTimestamp(isoStr) {
     var date = new Date(isoStr);
     var formatted = date.toLocaleDateString('en-GB', {
@@ -140,15 +130,10 @@
       var meta = document.createElement('div');
       meta.className = 'expense-meta';
 
-      var tracked = document.createElement('span');
-      tracked.className = 'expense-tracked';
-      tracked.textContent = 'Tracked For: ' + formatDate(expense.trackedDate);
-
       var logged = document.createElement('span');
       logged.className = 'expense-logged';
       logged.textContent = 'Logged: ' + formatTimestamp(expense.loggedAt);
 
-      meta.appendChild(tracked);
       meta.appendChild(logged);
       left.appendChild(meta);
 
@@ -178,12 +163,22 @@
   }
 
   function addExpense(date, name, amount) {
+    var dateParts = date.split('-');
+    var now = new Date();
+    var loggedDate = new Date(
+      parseInt(dateParts[0], 10),
+      parseInt(dateParts[1], 10) - 1,
+      parseInt(dateParts[2], 10),
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds()
+    );
+
     var expense = {
       id: Date.now(),
-      trackedDate: date,
       name: name.trim(),
       amount: Number(amount),
-      loggedAt: new Date().toISOString(),
+      loggedAt: loggedDate.toISOString(),
     };
 
     expenses.push(expense);
