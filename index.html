@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Expense Tracker App - Track your daily expenses in Nigerian Naira">
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1 class="app-title">Expense Tracker</h1>
+      <p class="app-subtitle">Track your daily expenses in Naira (₦)</p>
+    </header>
+
+    <section class="card form-card" aria-label="Add new expense">
+      <h2 class="section-title">Add Expense</h2>
+      <form id="expense-form" novalidate>
+        <div class="form-group">
+          <label for="expense-name">Expense Name</label>
+          <input type="text" id="expense-name" name="name" placeholder="e.g. Transport, Food, Data" autocomplete="off" required>
+          <span class="error-message" id="name-error" role="alert"></span>
+        </div>
+        <div class="form-group">
+          <label for="expense-amount">Amount (₦)</label>
+          <input type="text" id="expense-amount" name="amount" placeholder="e.g. 2500" inputmode="numeric" autocomplete="off" required>
+          <span class="error-message" id="amount-error" role="alert"></span>
+        </div>
+        <button type="submit" id="add-btn">Add Expense</button>
+      </form>
+    </section>
+
+    <section class="card list-card" aria-label="Expense list">
+      <h2 class="section-title">Expenses</h2>
+      <div id="expense-list" class="expense-list">
+        <div class="empty-state" id="empty-state">
+          <p>No expenses added yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card total-card" aria-label="Total expenses">
+      <h2 class="section-title">Total Expenses</h2>
+      <div id="total-amount" class="total-amount">₦0</div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
