@@ -1,15 +1,18 @@
 :root {
-  --primary: #059669;
-  --primary-dark: #047857;
-  --primary-light: #d1fae5;
+  --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --gradient-hover: linear-gradient(135deg, #4f46e5, #7c3aed);
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #ede9fe;
   --danger: #dc2626;
   --danger-light: #fee2e2;
   --text: #1f2937;
   --text-secondary: #6b7280;
-  --bg: #f0fdf4;
+  --bg: #f5f3ff;
   --card-bg: #ffffff;
   --border: #e5e7eb;
   --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 24px rgba(99, 102, 241, 0.15);
   --radius: 12px;
   --radius-sm: 8px;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -43,18 +46,22 @@ body {
 .app-header {
   text-align: center;
   margin-bottom: 24px;
+  background: var(--gradient);
+  padding: 28px 24px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25);
 }
 
 .app-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: #fff;
   letter-spacing: -0.5px;
 }
 
 .app-subtitle {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.85);
   margin-top: 4px;
 }
 
@@ -64,6 +71,12 @@ body {
   box-shadow: var(--shadow);
   padding: 20px 24px;
   margin-bottom: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
 }
 
 .section-title {
@@ -101,7 +114,7 @@ body {
 
 .form-group input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .error-message {
@@ -126,20 +139,26 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
-  background: var(--primary);
+  background: var(--gradient);
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
   font-family: inherit;
+  background-size: 200% 200%;
+  background-position: 0% 0%;
 }
 
 #add-btn:hover {
-  background: var(--primary-dark);
+  background: var(--gradient-hover);
+  background-size: 200% 200%;
+  background-position: 100% 100%;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  transform: translateY(-1px);
 }
 
 #add-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 /* Expense List */
@@ -231,7 +250,7 @@ body {
 
 /* Total */
 .total-card {
-  background: var(--primary);
+  background: var(--gradient);
   color: #fff;
 }
 
@@ -254,6 +273,10 @@ body {
 
   .card {
     padding: 16px;
+  }
+
+  .app-header {
+    padding: 20px 16px;
   }
 
   .app-title {
